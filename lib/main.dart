@@ -3,6 +3,7 @@ import 'package:bookify/EpubViewer/EpubViewer.dart';
 import 'package:bookify/EpubViewer/EpubViewerII.dart';
 import 'package:bookify/Screens/LoginScreen.dart';
 import 'package:bookify/Screens/MainScreen.dart';
+import 'package:bookify/Screens/SignUpScreen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

@@ -1,15 +1,17 @@
-import 'package:bookify/Screens/SignUpScreen.dart';
+import 'package:bookify/Screens/LoginScreen.dart';
 import 'package:flutter/material.dart';
 
-class LogInScreen extends StatefulWidget {
-  const LogInScreen({Key? key}) : super(key: key);
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
 
   @override
-  State<LogInScreen> createState() => _LogInScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LogInScreenState extends State<LogInScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
 
+
+  //password visibility
   bool passwordVisible = false;
   @override
   void initState(){
@@ -20,9 +22,6 @@ class _LogInScreenState extends State<LogInScreen> {
   var _formKey = GlobalKey<FormState>();
 
 
-
-  final TextEditingController email = TextEditingController();
-  final TextEditingController password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +37,51 @@ class _LogInScreenState extends State<LogInScreen> {
             children: [
 
 
+              // enter name
+              Row(
+
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 60.0),
+                    child: const Text("Name"),
+                  ),
+                  const SizedBox(width: 15),
+                  SizedBox(
+                    width: 281,
+                    child: TextFormField(
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color.fromRGBO(191, 207, 255, 1),
+                      ),
+                      textAlign: TextAlign.left,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        filled: true,
+                        hintText: 'john',
+                        hintStyle: const TextStyle(
+                          fontSize: 12,
+                          color: Color.fromRGBO(191, 207, 255, 1),
+                        ),
+                        isDense: true,
+                        contentPadding: const EdgeInsets.all(10.0),
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(color: Color.fromRGBO(191, 207, 255, 1),)
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: const BorderSide(color: Color.fromRGBO(191, 207, 255, 1))
+                        ),
+                        fillColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 14),
+
+
+
               // enter email
               Row(
 
@@ -49,7 +93,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   const SizedBox(width: 15),
                   SizedBox(
                     width: 281,
-                    child: TextField(
+                    child: TextFormField(
                       style: const TextStyle(
                         fontSize: 12,
                         color: Color.fromRGBO(191, 207, 255, 1),
@@ -94,7 +138,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   const SizedBox(width: 15),
                   SizedBox(
                     width: 281,
-                    child: TextField(
+                    child: TextFormField(
                       style: const TextStyle(
                         fontSize: 12,
                         color: Color.fromRGBO(191, 207, 255, 1),
@@ -152,20 +196,21 @@ class _LogInScreenState extends State<LogInScreen> {
                 ),
                 child: ElevatedButton(
 
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromRGBO(0, 0, 179, 1),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromRGBO(0, 0, 179, 1),
 
-                  ),
+                    ),
                     onPressed: (){
 
                     },
-                    child: Text('Login', style: TextStyle(fontSize: 10, color: Colors.white),)
+                    child: Text('Sign Up', style: TextStyle(fontSize: 10, color: Colors.white),)
                 ),
               ),
 
               TextButton(onPressed: (){
-                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SignUpScreen()));
-              }, child: Text("Sign Up ?"))
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LogInScreen()));
+
+              }, child: Text("Log In ?"))
 
             ],
           ),
