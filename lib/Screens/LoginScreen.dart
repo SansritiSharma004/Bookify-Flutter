@@ -17,8 +17,11 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
 
+
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Center(
 
@@ -128,7 +131,28 @@ class _LogInScreenState extends State<LogInScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 10),
+            Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                  color: const Color.fromRGBO(0, 0, 179, 1),
+                  borderRadius: BorderRadius.circular(50),
+                  border: Border.all(
+                      width: 2,
+                      color: Color.fromRGBO(191, 207, 255, 10)
+                  )
+              ),
+              child: ElevatedButton(
+                  onPressed: (){
+
+
+                  },
+                  child: Text('Login', style: TextStyle(fontSize: 14),)
+              ),
+            ),
+
+            TextButton(onPressed: (){}, child: Text("Sign Up"))
 
           ],
         ),

@@ -1,6 +1,7 @@
 
 import 'package:bookify/EpubViewer/EpubViewer.dart';
 import 'package:bookify/EpubViewer/EpubViewerII.dart';
+import 'package:bookify/Screens/LoginScreen.dart';
 import 'package:bookify/Screens/MainScreen.dart';
 
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
         )
       ),
 
-        home: EpubViewerWidget(),
+        home: LogInScreen(),
     );
   }
 }
