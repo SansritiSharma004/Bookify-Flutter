@@ -1,5 +1,7 @@
 import 'package:bookify/Screens/SignUpScreen.dart';
+import 'package:bookify/Services/LoginService.dart';
 import 'package:flutter/material.dart';
+
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -17,12 +19,10 @@ class _LogInScreenState extends State<LogInScreen> {
     passwordVisible = true;
   }
 
+  LoginService loginService = LoginService();
   var _formKey = GlobalKey<FormState>();
-
-
-
-  final TextEditingController email = TextEditingController();
-  final TextEditingController password = TextEditingController();
+  var _email ;
+  var _password;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class _LogInScreenState extends State<LogInScreen> {
                   const SizedBox(width: 15),
                   SizedBox(
                     width: 281,
-                    child: TextField(
+                    child: TextFormField(
                       style: const TextStyle(
                         fontSize: 12,
                         color: Color.fromRGBO(191, 207, 255, 1),
@@ -75,6 +75,11 @@ class _LogInScreenState extends State<LogInScreen> {
                         ),
                         fillColor: Colors.white,
                       ),
+
+                      onSaved: (value)
+                      {
+                        _email = value;
+                      },
                     ),
                   ),
                 ],
@@ -94,7 +99,8 @@ class _LogInScreenState extends State<LogInScreen> {
                   const SizedBox(width: 15),
                   SizedBox(
                     width: 281,
-                    child: TextField(
+                    child: TextFormField(
+
                       style: const TextStyle(
                         fontSize: 12,
                         color: Color.fromRGBO(191, 207, 255, 1),
@@ -134,6 +140,11 @@ class _LogInScreenState extends State<LogInScreen> {
                         ),
                         fillColor: Colors.white,
                       ),
+                      onSaved: (value)
+                      {
+                        _password = value;
+                      },
+
                     ),
                   ),
                 ],
@@ -156,7 +167,16 @@ class _LogInScreenState extends State<LogInScreen> {
                     backgroundColor: const Color.fromRGBO(0, 0, 179, 1),
 
                   ),
-                    onPressed: (){
+                    onPressed: ()
+                    {
+                      final isValid = _formKey.currentState!.validate();
+                      if(!isValid)
+                      {
+                        return;
+                      }
+                      _formKey.currentState!.save();
+                     var response =  loginService.login(_email , _password);
+
 
                     },
                     child: Text('Login', style: TextStyle(fontSize: 10, color: Colors.white),)
