@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:bookify/Services/GlobalVars.dart';
 import 'package:http/http.dart' as http;
 
 class LoginService
@@ -11,7 +12,7 @@ class LoginService
     var user = {"email" : _Email , "password" : _Password};
     print(jsonEncode(user));
 
-    var url = Uri.http("192.168.64.215:8080", "/users/login");
+    var url = Uri.http(localhost, "/users/login");
 
     var response = await http.post(url,headers: {
       'Content-Type': 'application/json', // Set the Content-Type header

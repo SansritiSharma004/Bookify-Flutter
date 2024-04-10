@@ -34,6 +34,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
         author: model.author.toString(),
         imagePath: model.imagePath.toString(),
         genre: model.genre.toString(),
+        bookPath: model.epubFilePath.toString(),
       );
     }).toList();
 

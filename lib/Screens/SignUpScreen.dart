@@ -1,4 +1,6 @@
 import 'package:bookify/Screens/LoginScreen.dart';
+import 'package:bookify/Screens/MainScreen.dart';
+import 'package:bookify/Services/SignUpService.dart';
 import 'package:flutter/material.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -20,6 +22,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   var _formKey = GlobalKey<FormState>();
+  var _email, _name, _password;
+  var signUpService = SignUpService();
 
 
 
@@ -74,6 +78,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         fillColor: Colors.white,
                       ),
+                      onSaved: (value){
+                        _name = value;
+                      },
                     ),
                   ),
                 ],
@@ -119,6 +126,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         fillColor: Colors.white,
                       ),
+                      onSaved: (value){
+                        _email = value;
+                      },
                     ),
                   ),
                 ],
@@ -178,6 +188,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         fillColor: Colors.white,
                       ),
+                      onSaved: (value){
+                        _password = value;
+                      },
                     ),
                   ),
                 ],
@@ -200,7 +213,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       backgroundColor: const Color.fromRGBO(0, 0, 179, 1),
 
                     ),
-                    onPressed: (){
+                    onPressed: () async{
+                      final isvalid = _formKey.currentState!.validate();
+                      if(!isvalid){
+                        return;
+                      }
+
+                      _formKey.currentState!.save();
+                      var response = await signUpService.signup(_name, _email, _password);
+                      print(response);
+
+                      if(response == 200){
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LogInScreen()));
+                      }
+
+                      else if(response == 406){
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Row(
+                            children: [
+                              Icon(Icons.warning_amber_rounded, color: Colors.grey,),
+                              Text("Email already exist.", style: TextStyle(color: Colors.red),),
+                            ],
+                          ),
+                          backgroundColor: Colors.white,
+
+                        )
+                        );
+                      }
+                      else{
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Row(
+                            children: [
+                              Icon(Icons.warning_amber_rounded, color: Colors.grey,),
+                              Text("There may be some error. Check your network connection", style: TextStyle(color: Colors.red),),
+                            ],
+                          ),
+                          backgroundColor: Colors.white,
+                        ));
+
+                      }
 
                     },
                     child: Text('Sign Up', style: TextStyle(fontSize: 10, color: Colors.white),)

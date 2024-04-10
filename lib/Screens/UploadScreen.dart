@@ -1,3 +1,4 @@
+import 'package:bookify/Services/UploadService.dart';
 import 'package:bookify/models/BooksModel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,9 @@ class _UploadScreenState extends State<UploadScreen> {
   String dropdownvalue = 'Romance';
   var fileName;
   var result;
+  var _formKey = GlobalKey<FormState>();
+  var uploadService = UploadService();
+  int userid = 1;
 
 
   late bool _loading;
@@ -51,6 +55,8 @@ class _UploadScreenState extends State<UploadScreen> {
     _loading = false;
   }
 
+  var imagePath, bookPath, bookName, authorName, description, category;
+
   //pick image
   File? image;
   Future pickImage() async {
@@ -58,9 +64,11 @@ class _UploadScreenState extends State<UploadScreen> {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if(image == null) return;
       final imageTemp = File(image.path);
+      imagePath = image.path;
       setState(()  {
         this.image = imageTemp;
         imagePathController.text = imageTemp.path;
+
       });
     } on PlatformException catch(e) {
       print('Failed to pick image: $e');
@@ -133,6 +141,8 @@ class _UploadScreenState extends State<UploadScreen> {
                       allowedExtensions: ['epub'],
                     );
 
+
+
                     setState(() {
                       _loading = false; // Stop showing the linear progress indicator
                     });
@@ -143,7 +153,11 @@ class _UploadScreenState extends State<UploadScreen> {
                       setState(() {
                         // Extracting file name from path
                         fileName = result.files.single.name ?? "Unknown";
+                        print(result.files.single.path);
+                        bookPath = result.files.single.path;
+                        print(bookPath);
                       });
+
                     }
                   },
                   child: const Text(
@@ -212,120 +226,37 @@ class _UploadScreenState extends State<UploadScreen> {
 
 
                 // Form
-                Column(
-                  children: [
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
 
 
-                    // enter title
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: const Text("Title :"),
-                        ),
-                        const SizedBox(width: 9),
-                        SizedBox(
-                          width: 281,
-                          child: TextField(
-                            controller: titleController,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Color.fromRGBO(191, 207, 255, 1),
-                            ),
-                            textAlign: TextAlign.left,
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecoration(
-                              filled: true,
-                              hintText: 'Book Title',
-                              hintStyle: const TextStyle(
-                                fontSize: 12,
-                                color: Color.fromRGBO(191, 207, 255, 1),
-                              ),
-                              isDense: true,
-                              contentPadding: const EdgeInsets.all(10.0),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: const BorderSide(color: Color.fromRGBO(191, 207, 255, 1),)
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: const BorderSide(color: Color.fromRGBO(191, 207, 255, 1))
-                              ),
-                              fillColor: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 14),
-
-
-
-                    // enter author name
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Author :"),
-                        const SizedBox(width: 9),
-                        SizedBox(
-                          width: 280,
-                          child: TextField(
-                            controller: authorController,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Color.fromRGBO(191, 207, 255, 1),
-                            ),
-                            textAlign: TextAlign.left,
-                            keyboardType: TextInputType.text,
-                            decoration: InputDecoration(
-                              filled: true,
-                              hintText: 'Author Name',
-                              hintStyle: const TextStyle(
-                                fontSize: 12,
-                                color: Color.fromRGBO(191, 207, 255, 1),
-                              ),
-                              isDense: true,
-                              contentPadding: const EdgeInsets.all(10.0),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: const BorderSide(color: Color.fromRGBO(191, 207, 255, 1),)
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: const BorderSide(color: Color.fromRGBO(191, 207, 255, 1))
-                              ),
-                              fillColor: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 14),
-
-
-                    //Description
-                    Padding(
-                      padding: const EdgeInsets.only(left: 19.0),
-                      child: Row(
-                        //mainAxisAlignment: MainAxisAlignment.center,
+                      // enter title
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("Description :"),
-                          const SizedBox(width: 11),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 16.0),
+                            child: const Text("Title :"),
+                          ),
+                          const SizedBox(width: 9),
                           SizedBox(
                             width: 281,
-                            child: TextField(
-                              controller: descriptionController,
+                            child: TextFormField(
+                              onSaved: (value){
+                                bookName = value;
+                              },
+                              controller: titleController,
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: Color.fromRGBO(191, 207, 255, 1),
                               ),
                               textAlign: TextAlign.left,
-                              keyboardType: TextInputType.multiline,
-                              maxLines: 6,
+                              keyboardType: TextInputType.text,
                               decoration: InputDecoration(
                                 filled: true,
-                                hintText: 'Book Description',
+                                hintText: 'Book Title',
                                 hintStyle: const TextStyle(
                                   fontSize: 12,
                                   color: Color.fromRGBO(191, 207, 255, 1),
@@ -346,8 +277,103 @@ class _UploadScreenState extends State<UploadScreen> {
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 14),
+
+
+
+                      // enter author name
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Author :"),
+                          const SizedBox(width: 9),
+                          SizedBox(
+                            width: 280,
+                            child: TextFormField(
+                              onSaved: (value){
+                                authorName = value;
+                              },
+                              controller: authorController,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Color.fromRGBO(191, 207, 255, 1),
+                              ),
+                              textAlign: TextAlign.left,
+                              keyboardType: TextInputType.text,
+                              decoration: InputDecoration(
+                                filled: true,
+                                hintText: 'Author Name',
+                                hintStyle: const TextStyle(
+                                  fontSize: 12,
+                                  color: Color.fromRGBO(191, 207, 255, 1),
+                                ),
+                                isDense: true,
+                                contentPadding: const EdgeInsets.all(10.0),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: const BorderSide(color: Color.fromRGBO(191, 207, 255, 1),)
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: const BorderSide(color: Color.fromRGBO(191, 207, 255, 1))
+                                ),
+                                fillColor: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 14),
+
+
+                      //Description
+                      Padding(
+                        padding: const EdgeInsets.only(left: 19.0),
+                        child: Row(
+                          //mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Description :"),
+                            const SizedBox(width: 11),
+                            SizedBox(
+                              width: 281,
+                              child: TextFormField(
+                                onSaved: (value){
+                                  description = value;
+                                },
+                                controller: descriptionController,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Color.fromRGBO(191, 207, 255, 1),
+                                ),
+                                textAlign: TextAlign.left,
+                                keyboardType: TextInputType.multiline,
+                                maxLines: 6,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  hintText: 'Book Description',
+                                  hintStyle: const TextStyle(
+                                    fontSize: 12,
+                                    color: Color.fromRGBO(191, 207, 255, 1),
+                                  ),
+                                  isDense: true,
+                                  contentPadding: const EdgeInsets.all(10.0),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: const BorderSide(color: Color.fromRGBO(191, 207, 255, 1),)
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                      borderSide: const BorderSide(color: Color.fromRGBO(191, 207, 255, 1))
+                                  ),
+                                  fillColor: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 20,),
 
@@ -393,6 +419,7 @@ class _UploadScreenState extends State<UploadScreen> {
                         setState(() {
                           dropdownvalue = newValue!;
                           genreController.text = newValue;
+                          category = newValue;
 
                         });
                       },
@@ -428,28 +455,42 @@ class _UploadScreenState extends State<UploadScreen> {
                       )
                   ),
                   child: IconButton(
-                      onPressed: (){
-                        final data = BooksModel(
-                            title: titleController.text,
-                            author: authorController.text,
-                            description: descriptionController.text,
-                            epubFilePath: bookPathController.text,
-                            imagePath: imagePathController.text,
-                            genre: genreController.text
-                        );
+                      onPressed: ()async{
+                        // final data = BooksModel(
+                        //     title: titleController.text,
+                        //     author: authorController.text,
+                        //     description: descriptionController.text,
+                        //     epubFilePath: bookPathController.text,
+                        //     imagePath: imagePathController.text,
+                        //     genre: genreController.text
+                        // );
 
 
-                        final box = Hive.box<BooksModel>('books');
-                        box.add(data);
+                        // final box = Hive.box<BooksModel>('books');
+                        // box.add(data);
 
-                        titleController.clear();
-                        authorController.clear();
-                        descriptionController.clear();
-                        bookPathController.clear();
-                        imagePathController.clear();
-                        genreController.clear();
+                        final isValid = _formKey.currentState!.validate();
+                        if(!isValid){
+                          return;
+                        }
 
-                        Navigator.pop(context, data);
+                        _formKey.currentState!.save();
+                        print(bookPath);
+                        var response = await uploadService.uploadbook(imagePath, bookPath, bookName, authorName, description, category, userid);
+
+
+                        // titleController.clear();
+                        // authorController.clear();
+                        // descriptionController.clear();
+                        // bookPathController.clear();
+                        // imagePathController.clear();
+                        // genreController.clear();
+
+
+
+
+
+                        //Navigator.pop(context, data);
 
                       },
                       icon: const ImageIcon(AssetImage('assets/cloud-computing.png'), size: 40, color: Colors.white,)

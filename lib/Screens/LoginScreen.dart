@@ -1,3 +1,4 @@
+import 'package:bookify/Screens/MainScreen.dart';
 import 'package:bookify/Screens/SignUpScreen.dart';
 import 'package:bookify/Services/LoginService.dart';
 import 'package:flutter/material.dart';
@@ -168,14 +169,58 @@ class _LogInScreenState extends State<LogInScreen> {
 
                   ),
                     onPressed: ()
-                    {
+                    async {
                       final isValid = _formKey.currentState!.validate();
                       if(!isValid)
                       {
                         return;
                       }
                       _formKey.currentState!.save();
-                     var response =  loginService.login(_email , _password);
+                     var response =  await loginService.login(_email , _password);
+                     print(response);
+
+                     if(response == 200){
+                       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
+                     }
+
+                     else if(response == 409){
+                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                         content: Row(
+                           children: [
+                             Icon(Icons.warning_amber_rounded, color: Colors.grey,),
+                             Text("Incorrect Password", style: TextStyle(color: Colors.red),),
+                           ],
+                         ),
+                         backgroundColor: Colors.white,
+
+                       )
+                       );
+                     }
+
+                     else if(response == 404){
+                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                         content: Row(
+                           children: [
+                             Icon(Icons.warning_amber_rounded, color: Colors.grey,),
+                             Text("Invalid Email or Password", style: TextStyle(color: Colors.red),),
+                           ],
+                         ),
+                         backgroundColor: Colors.white,
+                       ));
+                     }
+
+                     else{
+                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                         content: Row(
+                           children: [
+                             Icon(Icons.warning_amber_rounded, color: Colors.grey,),
+                             Text("There may be some error. Check your network connection", style: TextStyle(color: Colors.red),),
+                           ],
+                         ),
+                         backgroundColor: Colors.white,
+                       ));
+
+                     }
 
 
                     },
